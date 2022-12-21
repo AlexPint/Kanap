@@ -5,6 +5,11 @@ const productId = new URL(window.location.href).searchParams.get("id");
 
 console.log(productId);
 
+
+// on déclare un tableau vide
+let productData = {};
+
+
 fetch(`http://localhost:3000/api/products/${productId}`)
   // fetch va effectuer une requête auprès de l'api dans le but de selectionner le bon produit
   .then(function (res) {
@@ -13,7 +18,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
   .then(function (detailsProduct) {
     console.log(detailsProduct);
-
+    productData = detailsProduct;
     //on définit une variable "img" afin de créer une balise img dans le html. On lui attribut ensuite le lien et la description "alt" correspondante. Pour ensuite l'implémenter dans le html via le ciblage "queryselector", et l'outil pour l'incorporer "appenChild"
     const img = document.createElement("img");
     img.setAttribute("src", detailsProduct.imageUrl);
@@ -51,8 +56,9 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     console.log("err");
   });
 
-//On créé une fonction qiui va permettre d'enrgistrer des éléments dans le local storage via une clé et une valeur
+//On créé une fonction qui va permettre d'enrgistrer des éléments dans le local storage via une clé et une valeur
 // on transforme les données complexes en chaine dee caractères avec "JSON.stringify()"
+// C'est objet "basket" ce qui est stocké dans le panier
 function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));
 }
@@ -71,20 +77,21 @@ function getBasket() {
   }
 }
 
+
 // Fonction qui va permettre d'ajouter un élément au panier
 // On ajoute une var product puisqu'on met un produit au panier. Permet de dire que c'est ce produit la qu'on veut ajouter au panier
 function addBasket(product) {
   //On créé une var pour récuperer le panier situé dans le local storage en utilisant la fonction au dessus
   let basket = getBasket();
   //On cherche dans le panier si il y a un produit dont l'id = à l'id du produit que je veux ajouter.
-  let foundProduct = basket.find((p) => p.id == product.id);
+  let foundProduct = basket.find((p) => p._id == product._id);
   // undefiened est la valeur null que renvoi find s'il ne trouve rien. Si il est different c'est qu'il existe déjà sinon
   if (foundProduct != undefined) {
     // Si il y a deja le même produit dans le panier on ajoute suelement une quantité
-    foundProduct.quantity++;
+    foundProduct.quantity += product.quantity;
   } else {
     // sinon on ajoute le produit
-    product.quantity = 0;
+    product.quantity = product.quantity;
     // Permet d'ajouter des produits. On peut matérialiser la var product comme un tableau, auquel on ajoute (push) un produit
     basket.push(product);
   }
@@ -93,56 +100,34 @@ function addBasket(product) {
   saveBasket(basket);
 }
 
-function removeFromBasket(product) {
-  // On récupère le pannier
-  let basket = getBasket();
-  // on va faire un filter pour retirer un élément du panier. Comme le find, c'est une foncton qui va travailler sur un tableau. Elle va filtrer un tableai par rapport à une condition.
-  basket = basket.filter((p) => p.id != product.id);
-  saveBasket(basket);
-}
-
-function changeQuantity(product, quantity) {
-  let basket = getBasket();
-  let foundProduct = basket.find((p) => p.id == product.id);
-  if (foundProduct != undefined) {
-    foundProduct.quantity += quantity;
-    // pour ne pas avoir des quantités inférieures à 0, on utilise un if qui permet de vider le panier
-    if (foundProduct.quantity <= 0) {
-      removeFromBasket(foundProduct);
-    } else {
-      saveBasket(basket);
-    }
-  }
-}
-
-// calculer la quantité total de produit
-function getNumberProduct() {
-  // On recupere le panier
-  let basket = getBasket();
-  let number = 0;
-  for (let product of basket) {
-    number += product.quantity;
-  }
-  // on retourne
-  return number;
-}
-
-function getTotalPrice() {
-  let basket = getBasket();
-  let total = 0;
-  for (let product of basket) {
-    total += product.quantity * product.price;
-  }
-  // on retourne
-  return total;
-}
-
-
 //add event listener sur le bouton
 //et quand on clique sur le bouton on appelle le add basket
-const addToCartC = document.getElementById("addToCart");
+const addToCart = document.getElementById("addToCart");
 
-addToCart.addEventListener('click', addBasket)
+addToCart.addEventListener('click', function(){
+  // on récupere la quantité et la couleur sélectionnée dans le html(pas dans le javascript)
+  let selectColor = document.getElementById("colors");
+  let selectQuantity = document.getElementById("quantity");
+  
+  // On créer une var pour transmettre les bonnes donnes tels que l'id, la couleur, et la quantité
+  const product = {
+    _id: productData._id,
+    color: selectColor.value,
+    quantity: Number(selectQuantity.value),
+  };
+  // Saisies des champs / quantité & la couleur
+  if (selectQuantity.value == 0) {
+    alert("Veuillez selectionner la quantité souhaitée.");
+    return;
+  }
+  if (selectColor.value == 0) {
+      alert("Veuillez renseigner la couleur de l'article.");
+      return;
+  }
+
+  addBasket(product);
+})
+
 
 
 // comment relier les quantité au add event listener
