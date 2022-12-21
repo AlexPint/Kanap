@@ -1,10 +1,33 @@
-// Etape 1 afficher un tableau recap des achats dans la page panier 
+// Etape 1 afficher un tableau recap des achats dans la page panier
+
+/*
+Tu vas utiliser le panier pour afficher les éléments
+Tu as la fonction getBasket qui peut t'aider. En fait, tu récupères un tableau que tu parcours et que tu affiches.
+Par contre pour le prix on aura besoin de faire un fetch.
+Tu vas essayer avec le DOM d'afficher avec la partie commenter le texte HTML.
+Pas besoin de lien pour atteindre le panier, il faut juste cliquer sur le bouton panier.
+Cordialement.*/
+
 // on récupère le panier dans le local storage
+function getBasket() {
+  //On enregistre dans une var ce que l'on récupère afin de pouvoir le réutiliser
+  let basket = localStorage.getItem("basket");
+  //Par defaut, quand l'utilisateur est sur le site, le panier est vide, la valeur doit donc etre nul et renvoie vers un tableau vide
+  if (basket == null) {
+    return [];
+    // sinon le panier existe et dans ce cas on récupère les données
+  } else {
+    return JSON.parse(basket);
+  }
+}
 let basket = getBasket();
-// On parcourt le tableau
+console.log(basket);
+
+// On parcourt le tableau et on va metre en place l'affiche
 for (let product of basket){
   
   const article = document.createElement("article");
+
   article.setAttribute("class", "cart_item");
   article.setAttribute("data-id", "{product-ID}");
   article.setAttribute("data-color", "{product-color}");
@@ -43,6 +66,7 @@ for (let product of basket){
   input.setAttribute("min", "1");
   input.setAttribute("max", "100");
   input.setAttribute("value", "42");
+  
 
 
   const div222 = document.createElement("div");
@@ -55,13 +79,13 @@ for (let product of basket){
   article.appendChild(div1, div2);
   div1.appendChild(img);
   div2.appendChild(div21, div22);
-  div21.appendChild(h2, p1, P2);
+  div21.appendChild(h2, p1, p2);
   div22.appendChild(div221, div222);
   div221.appendChild(p3, input);
   div222.appendChild(p4);
 }
 
-
+/*
 // On crée une fonction qui permet de récupérer les informations stockées via le getItem
 // on transforme les données complexes en chaine dee caractères avec "JSON.parse()" pour la fonction get
 function getBasket() {
@@ -105,7 +129,8 @@ function removeFromBasket(product) {
     basket = basket.filter((p) => p._id != product._id);
     saveBasket(basket);
   }*/
-  
+
+/*
 function changeQuantity(product, quantity) {
     let basket = getBasket();
     let foundProduct = basket.find((p) => p._id == product._id);
@@ -141,5 +166,4 @@ function getNumberProduct() {
     }
     // on retourne
     return total;
-  }
-  
+  }*/
