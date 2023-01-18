@@ -10,7 +10,7 @@ fetch("http://localhost:3000/api/products")
     // le console.log permet de contrôler la récupération des données et de visualiser les objets dans la console.
     console.log(products);
     
-    // Ensuite on créé une fonction avec qui va nous permettre de parcourir les données récupérées, via la fonction "for". = Pour chaque produit de ce tableau faire la fonction suivante:
+    // Ensuite on créé une boucle qui va nous permettre de parcourir les données récupérées, via la fonction "for". = Pour chaque produit de ce tableau faire la fonction suivante:
 
     for (let product of products) {
       // la fonction est la suivante, on crée dans le DOM des balises.
@@ -42,3 +42,4 @@ fetch("http://localhost:3000/api/products")
     console.log("err");
   });
 
+  

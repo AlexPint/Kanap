@@ -1,6 +1,5 @@
 const productId = new URL(window.location.href).searchParams.get("id");
-// pk new ? nouvelle instance de l'objet url
-//window.location.href permet de récupérer lÚRL de la page courante
+//window.location.href permet de récupérer l'URL de la page courante
 //searchParams.get() permet de retourner la première valeur associée au paramètre de recherche donné cad "id"
 
 console.log(productId);

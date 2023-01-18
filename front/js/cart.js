@@ -321,6 +321,10 @@ const validLastName = function(inputLastName) {
     let products = [];
     // Mettre les données dans le localStorage nomé "product"
     let finalProduct = JSON.parse(localStorage.getItem("basket"));
+    if (finalProduct.length == 0) {
+      alert("Votre panier est vide, vous ne pouvez pas faire de commande");
+      return;
+    }
     // Mettre les id dans le finalProduct
     for (let i = 0; i < finalProduct.length; i++) {
         products.push(finalProduct[i]._id);
